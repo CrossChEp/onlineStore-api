@@ -5,7 +5,8 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from models.general_methods import clear_model
-from schemas import UserPrivateModel, UserModel, UserRequestModel
+from models.users.auxilary_methods import hash_password
+from schemas import UserPrivateModel, UserModel, UserRequestModel, UserUpdateModel
 from store import User
 
 
@@ -31,4 +32,13 @@ def get_concrete_user(user_data: UserRequestModel, session: Session) -> User:
 
 def delete_user_from_database(user: User, session: Session) -> None:
     session.delete(user)
+    session.commit()
+
+
+def update_user_in_database(user_update_data: UserUpdateModel, user: User, session: Session) -> None:
+    user_query = session.query(User).filter_by(id=user.id)
+    if user_update_data.password:
+        user_update_data.password = hash_password(user_update_data.password)
+    user_clean_model = clear_model(user_update_data)
+    user_query.update(user_clean_model)
     session.commit()

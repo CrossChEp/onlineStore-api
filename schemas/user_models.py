@@ -3,6 +3,13 @@ from typing import Optional
 from pydantic import BaseModel
 
 
+class UserModelWithOptionalFieldsAbstract(BaseModel):
+    username: Optional[str]
+
+    class Config:
+        orm_mode = True
+
+
 class UserModelAbstract(BaseModel):
     username: str
 
@@ -24,6 +31,15 @@ class UserModel(UserModelAbstract):
         orm_mode = True
 
 
-class UserRequestModel(BaseModel):
+class UserRequestModel(UserModelWithOptionalFieldsAbstract):
     id: Optional[int]
-    username: Optional[str]
+
+    class Config:
+        orm_mode = True
+
+
+class UserUpdateModel(UserModelWithOptionalFieldsAbstract):
+    password: Optional[str]
+
+    class Config:
+        orm_mode = True
