@@ -4,8 +4,10 @@ from fastapi import APIRouter
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
 
+from api_routers.auth_routes import get_current_user
 from middlewares import generate_session
-from models import add_user_to_database, get_all_users_from_database, get_concrete_user
+from models import add_user_to_database, get_all_users_from_database, get_concrete_user, delete_user_from_database
+# from models.auth.auth import get_current_user
 from schemas import UserPrivateModel, UserModel, UserRequestModel
 from store import User
 
@@ -26,3 +28,9 @@ def get_users(session: Session = Depends(generate_session)) -> List[User]:
 @user_router.get('/api/user/{id}', response_model=UserModel)
 def get_user(user_id: int, session: Session = Depends(generate_session)) -> User:
     return get_concrete_user(UserRequestModel(id=user_id), session=session)
+
+
+@user_router.delete('/api/user/delete/{id}')
+def delete_user(user: User = Depends(get_current_user),
+                session: Session = Depends(generate_session)):
+    delete_user_from_database(user, session=session)

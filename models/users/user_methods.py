@@ -27,3 +27,8 @@ def get_concrete_user(user_data: UserRequestModel, session: Session) -> User:
     if not user:
         raise HTTPException(status_code=404, detail='user not found')
     return user
+
+
+def delete_user_from_database(user: User, session: Session) -> None:
+    session.delete(user)
+    session.commit()

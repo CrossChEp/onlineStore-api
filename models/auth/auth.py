@@ -33,16 +33,4 @@ def create_access_token(user_id: int):
     return encoded_jwt
 
 
-def get_current_user(session: Session, token: str):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: int = payload.get('id')
-        if not user_id:
-            raise credetials_exception
-        token = TokenData(id=user_id)
-    except JWTError:
-        raise credetials_exception
-    user = get_concrete_user(UserRequestModel(id=token.id), session)
-    if not user:
-        raise credetials_exception
-    return user
+
