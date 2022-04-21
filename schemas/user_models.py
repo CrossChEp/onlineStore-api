@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -20,3 +22,8 @@ class UserModel(UserModelAbstract):
 
     class Config:
         orm_mode = True
+
+
+class UserRequestModel(BaseModel):
+    id: Optional[int]
+    username: Optional[str]

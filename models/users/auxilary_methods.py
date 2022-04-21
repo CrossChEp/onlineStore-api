@@ -18,3 +18,4 @@ def convert_to_user_model_list(users: List[User]) -> List[UserModel]:
         user_model = generate_user_model_list(user)
         user_models_list.append(user_model)
     return user_models_list
+
