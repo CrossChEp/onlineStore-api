@@ -1,3 +1,5 @@
+from typing import List
+
 import bcrypt
 from sqlalchemy.orm import Session
 
@@ -10,3 +12,8 @@ def add_user_to_database(user_data: UserPrivateModel, session: Session) -> None:
     user = User(**user_data.dict())
     session.add(user)
     session.commit()
+
+
+def get_all_users_from_database(session: Session) -> List[User]:
+    users = session.query(User).all()
+    return users
