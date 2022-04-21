@@ -7,7 +7,6 @@ from starlette import status
 from configs import ALGORITHM, SECRET_KEY, credetials_exception
 from middlewares import generate_session
 from models import authenticate_user, create_access_token, get_concrete_user
-# from models.auth.auth import get_current_user
 from schemas import Token, UserModel, TokenData, UserRequestModel
 from store import User
 
@@ -16,7 +15,14 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 def get_current_user(session: Session = Depends(generate_session),
-                     token: str = Depends(oauth2_scheme)):
+                     token: str = Depends(oauth2_scheme)) -> User:
+    """gets current user using token
+
+    :param session: Session
+    :param token: str
+        (jwt token of user)
+    :return: User
+    """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id: int = payload.get('id')
@@ -34,6 +40,13 @@ def get_current_user(session: Session = Depends(generate_session),
 @auth_router.post('/token', response_model=Token)
 def login_for_token(form_data: OAuth2PasswordRequestForm = Depends(),
                     session: Session = Depends(generate_session)) -> Token:
+    """
+
+    :param form_data: OAuth2PasswordRequestForm
+        (oauth2 form)
+    :param session: Session
+    :return: Token
+    """
     user = authenticate_user(
         username=form_data.username,
         password=form_data.password,
@@ -50,5 +63,11 @@ def login_for_token(form_data: OAuth2PasswordRequestForm = Depends(),
 
 
 @auth_router.get('/user/me', response_model=UserModel)
-def read_user_me(current_user: User = Depends(get_current_user)):
+def read_user_me(current_user: User = Depends(get_current_user)) -> User:
+    """gets current user
+
+    :param current_user: User
+        (current user)
+    :return: User
+    """
     return current_user

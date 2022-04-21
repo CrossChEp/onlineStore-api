@@ -17,6 +17,14 @@ def verify_password(password, hashed_password) -> bool:
 
 
 def authenticate_user(username: str, password: str, session: Session) -> User:
+    """Returns user if user in db and has the same password, or False,
+    if something went wrong
+
+    :param username: str
+    :param password: str
+    :param session: Session
+    :return: User, bool
+    """
     user = get_concrete_user(user_data=UserRequestModel(username=username), session=session)
     if not user:
         return False
@@ -25,7 +33,12 @@ def authenticate_user(username: str, password: str, session: Session) -> User:
     return user
 
 
-def create_access_token(user_id: int):
+def create_access_token(user_id: int) -> str:
+    """creates access token
+
+    :param user_id: int
+    :return: str
+    """
     to_encode = {'id': user_id}
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({'exp': expire})

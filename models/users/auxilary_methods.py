@@ -23,6 +23,12 @@ def convert_to_user_model_list(users: List[User]) -> List[UserModel]:
 
 
 def hash_password(password: str) -> bytes:
+    """hashes password
+
+    :param password: str
+        (user's password)
+    :return: bytes
+    """
     hashed_password = bcrypt.hashpw(password.encode(), salt=bcrypt.gensalt())
     return hashed_password
 
