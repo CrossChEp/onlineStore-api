@@ -62,3 +62,10 @@ def update_product_data(product_id: int, new_product_data: ProductRequestModel, 
     session.commit()
 
 
+def delete_product_from_database(product_id: int, author: User, session: Session) -> None:
+    product = get_product_from_database(ProductRequestGetModel(id=product_id), session)
+    if product not in author.products:
+        raise HTTPException(status_code=403)
+    session.delete(product)
+    session.commit()
+

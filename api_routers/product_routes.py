@@ -7,7 +7,7 @@ from api_routers.auth_routes import get_current_user
 from middlewares import generate_session
 from models import add_product_to_database, get_all_products_from_database, get_typed_products_from_database, \
     get_author_products_from_database, get_products_sorted_by_name, get_products_sorted_by_sex, \
-    get_product_from_database, update_product_data
+    get_product_from_database, update_product_data, delete_product_from_database
 from schemas import ProductModel, ProductRequestGetModel, ProductRequestModel
 from store import User
 from store.db_model import Product
@@ -59,3 +59,9 @@ def update_product(product_id: int, new_product_data: ProductRequestModel,
                    session: Session = Depends(generate_session)) -> None:
     update_product_data(product_id=product_id, new_product_data=new_product_data,
                         author=author, session=session)
+
+
+@product_router.delete('/api/product')
+def delete_product(product_id: int, author: User = Depends(get_current_user),
+                   session: Session = Depends(generate_session)) -> None:
+    delete_product_from_database(product_id=product_id, author=author, session=session)
