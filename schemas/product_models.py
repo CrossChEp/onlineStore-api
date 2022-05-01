@@ -14,3 +14,5 @@ class ProductModel(BaseModel):
 
 class ProductGetModel(ProductModel):
     id: int
+    author: int
+

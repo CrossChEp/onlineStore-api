@@ -1,3 +1,5 @@
+from typing import List
+
 from sqlalchemy.orm import Session
 
 from schemas import ProductModel
@@ -11,3 +13,13 @@ def add_product_to_database(author: User,
     session.add(product)
     author.products.append(product)
     session.commit()
+
+
+def get_all_products_from_database(session: Session) -> List[Product]:
+    products = session.query(Product).all()
+    return products
+
+
+def get_typed_products_from_database(product_type: str, session: Session) -> List[Product]:
+    products = session.query(Product).filter_by(type=product_type).all()
+    return products
