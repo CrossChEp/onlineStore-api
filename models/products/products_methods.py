@@ -1,10 +1,10 @@
 from typing import List
 
 from fastapi import HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, Query
 
 from models.general_methods import clear_model
-from schemas import ProductModel, ProductRequestGetModel
+from schemas import ProductModel, ProductRequestGetModel, ProductRequestModel
 from store import User
 from store.db_model import Product
 
@@ -48,4 +48,17 @@ def get_product_from_database(product_data: ProductRequestGetModel, session: Ses
     if not product:
         raise HTTPException(status_code=404, detail='not found')
     return product
+
+
+def update_product_data(product_id: int, new_product_data: ProductRequestModel, author: User, session: Session) -> None:
+    product = get_product_from_database(ProductRequestGetModel(id=product_id), session)
+    clean_new_product_data = clear_model(new_product_data)
+    if not product:
+        raise HTTPException(status_code=404, detail='product not found')
+    if product not in author.products:
+        raise HTTPException(status_code=403)
+    product_query: Query = session.query(Product).filter_by(id=product_id)
+    product_query.update(clean_new_product_data)
+    session.commit()
+
 
