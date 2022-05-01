@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 
 from api_routers.auth_routes import get_current_user
 from middlewares import generate_session
-from models import add_product_to_database, get_all_products_from_database, get_typed_products_from_database
+from models import add_product_to_database, get_all_products_from_database, get_typed_products_from_database, \
+    get_author_products_from_database
 from schemas import ProductModel, ProductGetModel
 from store import User
 from store.db_model import Product
@@ -29,3 +30,8 @@ def get_all_products(session: Session = Depends(generate_session)) -> List[Produ
 def get_typed_product(product_type: str,
                       session: Session = Depends(generate_session)) -> List[Product]:
     return get_typed_products_from_database(product_type=product_type, session=session)
+
+
+@product_router.get('/api/product/author/{author_id}')
+def get_author_products(author_id: int, session: Session = Depends(generate_session)) -> List[Product]:
+    return get_author_products_from_database(author_id=author_id, session=session)
