@@ -1,0 +1,1 @@
+from .products_methods import add_product_to_database

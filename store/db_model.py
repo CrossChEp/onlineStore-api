@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ARRAY, ForeignKey, JSON
+from sqlalchemy import Column, Integer, String, ForeignKey, JSON, Float
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
@@ -17,8 +17,9 @@ class Product(Base):
     id = Column(Integer, primary_key=True)
     author = Column(Integer, ForeignKey('users.id'))
     sex = Column(String)
+    type = Column(String)
     name = Column(String)
     description = Column(String)
     sizes = Column(JSON)
-    price = Column(String)
+    price = Column(Float)
 
