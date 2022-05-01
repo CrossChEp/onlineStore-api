@@ -6,8 +6,9 @@ from sqlalchemy.orm import Session
 from api_routers.auth_routes import get_current_user
 from middlewares import generate_session
 from models import add_product_to_database, get_all_products_from_database, get_typed_products_from_database, \
-    get_author_products_from_database
-from schemas import ProductModel, ProductGetModel
+    get_author_products_from_database, get_products_sorted_by_name, get_products_sorted_by_sex, \
+    get_product_from_database
+from schemas import ProductModel, ProductRequestModel, ProductRequestGetModel
 from store import User
 from store.db_model import Product
 
@@ -35,3 +36,18 @@ def get_typed_product(product_type: str,
 @product_router.get('/api/product/author/{author_id}')
 def get_author_products(author_id: int, session: Session = Depends(generate_session)) -> List[Product]:
     return get_author_products_from_database(author_id=author_id, session=session)
+
+
+@product_router.get('/api/product/name/{product_name}')
+def get_products_by_name(product_name: str, session: Session = Depends(generate_session)) -> List[Product]:
+    return get_products_sorted_by_name(product_name, session)
+
+
+@product_router.get('/api/product/sex/{sex}')
+def get_product_by_sex(sex: str, session: Session = Depends(generate_session)) -> List[Product]:
+    return get_products_sorted_by_sex(sex, session)
+
+
+@product_router.get('/api/product/id/{product_id}')
+def get_product_by_id(product_id: int, session: Session = Depends(generate_session)) -> Product:
+    return get_product_from_database(ProductRequestGetModel(id=product_id), session)
