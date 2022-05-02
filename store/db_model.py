@@ -1,7 +1,16 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, JSON, Float
+from sqlalchemy import Column, Integer, String, ForeignKey, JSON, Float, Table
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
+
+
+UserAndProductRelation = Table(
+    'user_and_product_relation',
+    Base.metadata,
+    Column('id', Integer, primary_key=True),
+    Column('user_id', Integer, ForeignKey('users.id')),
+    Column('product_id', Integer, ForeignKey('products.id'))
+)
 
 
 class User(Base):
@@ -10,6 +19,7 @@ class User(Base):
     username = Column(String)
     password = Column(String)
     products = relationship('Product', backref='user')
+    bag = relationship('Product', secondary=UserAndProductRelation, backref='user_bag')
 
 
 class Product(Base):
@@ -22,4 +32,5 @@ class Product(Base):
     description = Column(String)
     sizes = Column(JSON)
     price = Column(Float)
+    people_bag = relationship('User', secondary=UserAndProductRelation, backref='product')
 
