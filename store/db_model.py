@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, JSON, Float, Table
+from sqlalchemy import Column, Integer, String, ForeignKey, JSON, Float, Table, DATE
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
@@ -18,9 +18,10 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String)
     password = Column(String)
-    products = relationship('Product', backref='user')
+    products = relationship('Product', backref='user', cascade="all, delete")
     bag = relationship('Product', secondary=UserAndProductRelation,
                        backref='user_bag', cascade="all, delete")
+    orders = relationship('Order', backref='user_orders', cascade="all, delete")
 
 
 class Product(Base):
@@ -36,3 +37,14 @@ class Product(Base):
     people_bag = relationship('User', secondary=UserAndProductRelation,
                               backref='product', cascade="all, delete")
 
+
+class Order(Base):
+    __tablename__ = 'orders'
+    id = Column(Integer, primary_key=True)
+    author = Column(Integer, ForeignKey('users.id'))
+    content = Column(JSON)
+    date = Column(DATE)
+    status = Column(String)
+    address = Column(String)
+    index = Column(Integer)
+    price_sum = Column(Float)
