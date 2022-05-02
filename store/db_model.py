@@ -48,3 +48,5 @@ class Order(Base):
     address = Column(String)
     index = Column(Integer)
     price_sum = Column(Float)
+
+
