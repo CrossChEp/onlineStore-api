@@ -1,5 +1,7 @@
 import datetime
+from typing import List
 
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from configs import PROCESSING_STATUS
@@ -16,3 +18,15 @@ def add_order_to_database(order_data: OrderModel, author: User, session: Session
     session.add(order)
     author.orders.append(order)
     session.commit()
+
+
+def get_user_orders_from_database(user: User) -> List[Order]:
+    orders = user.orders
+    return orders
+
+
+def get_order_from_database(order_id: int, user: User, session: Session) -> Order:
+    order = session.query(Order).filter_by(id=order_id).first()
+    if order not in user.orders:
+        raise HTTPException(status_code=403)
+    return order
