@@ -30,3 +30,9 @@ def get_order_from_database(order_id: int, user: User, session: Session) -> Orde
     if order not in user.orders:
         raise HTTPException(status_code=403)
     return order
+
+
+def cancel_user_order(order_id: int, user: User, session: Session) -> None:
+    order = get_order_from_database(order_id, user, session)
+    session.delete(order)
+    session.commit()
