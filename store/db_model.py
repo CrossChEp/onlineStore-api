@@ -19,7 +19,8 @@ class User(Base):
     username = Column(String)
     password = Column(String)
     products = relationship('Product', backref='user')
-    bag = relationship('Product', secondary=UserAndProductRelation, backref='user_bag')
+    bag = relationship('Product', secondary=UserAndProductRelation,
+                       backref='user_bag', cascade="all, delete")
 
 
 class Product(Base):
@@ -32,5 +33,6 @@ class Product(Base):
     description = Column(String)
     sizes = Column(JSON)
     price = Column(Float)
-    people_bag = relationship('User', secondary=UserAndProductRelation, backref='product')
+    people_bag = relationship('User', secondary=UserAndProductRelation,
+                              backref='product', cascade="all, delete")
 
