@@ -3,6 +3,7 @@ from typing import List
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, Query
 
+from models import create_default_product_image
 from models.general_methods import clear_model
 from schemas import ProductModel, ProductRequestGetModel, ProductRequestModel
 from store import User
@@ -11,6 +12,8 @@ from store.db_model import Product
 
 def add_product_to_database(author: User,
                             product_data: ProductModel, session: Session) -> None:
+    if not product_data.image:
+        product_data.image = create_default_product_image()
     product = Product(**product_data.dict())
     session.add(product)
     author.products.append(product)

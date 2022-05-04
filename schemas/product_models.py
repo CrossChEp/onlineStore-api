@@ -9,6 +9,7 @@ class ProductModel(BaseModel):
     type: str
     description: str
     sizes: dict[str, List[str]]
+    image: Optional[str]
     price: float
 
     class Config:

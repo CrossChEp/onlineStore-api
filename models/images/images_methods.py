@@ -13,3 +13,8 @@ def decode_image(hex_digit: str) -> bytes:
 
     return base64.decodebytes(b''.fromhex(hex_digit))
 
+
+def create_default_product_image() -> str:
+    with open('static/default_images/default_product.jpeg', 'wb') as image:
+        avatar = base64.encodebytes(image.read()).hex()
+    return avatar
